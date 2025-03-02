@@ -1,8 +1,7 @@
 import Image from "next/image";
+import { getRestaurantBySlug } from "@/data/get-restaurant-by-slug";
 import { notFound } from "next/navigation";
-import { db } from "@/lib/prisma";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import ConsumptionMethodOption from "./components/consumption-method-option";
 
 interface RestaurantPageProps {
   params: Promise<{ slug: string }>;
@@ -11,11 +10,7 @@ interface RestaurantPageProps {
 const RestaurantPage = async ({ params }: RestaurantPageProps) => {
   const { slug } = await params;
 
-  const restaurant = await db.restaurant.findUnique({
-    where: {
-      slug: slug,
-    },
-  });
+  const restaurant = await getRestaurantBySlug(slug); //busca o restaurante pelo slug
 
   if (!restaurant) {
     return notFound(); //retorna um erro 404
@@ -41,14 +36,21 @@ const RestaurantPage = async ({ params }: RestaurantPageProps) => {
           praticidade e sabor em cada detalhe.
         </p>
       </div>
-      <div className="grid grid-cols-2 pt-14">
-        <Card>
-          <CardContent className="flex flex-col items-center gap-8 py-8">
-            <Button variant="secondary" className="rounded-full">
-              Para comer aqui
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-2 gap-4 pt-14">
+        <ConsumptionMethodOption
+          imageUrl="/dine_in.png"
+          imageAlt="para comer aqui"
+          buttonText="Para comer aqui"
+          option="DINE_IN"
+          slug={slug}
+        />
+        <ConsumptionMethodOption
+          imageUrl="/takeaway.png"
+          imageAlt="para levar"
+          buttonText="Para levar"
+          option="TAKEAWAY"
+          slug={slug}
+        />
       </div>
     </div>
   );
