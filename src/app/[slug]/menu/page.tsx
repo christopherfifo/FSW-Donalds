@@ -1,8 +1,7 @@
-
-import { getRestaurantBySlug } from "@/data/get-restaurant-by-slug";
-
 import { notFound } from "next/navigation";
 import RestaurantHeader from "./components/header";
+import RestaurantCategories from "./components/categories";
+import { getRestaurantCategories } from "./data/get-restaurant-categories";
 
 interface RestaurantMenuPageProps {
   params: Promise<{ slug: string }>;
@@ -22,7 +21,7 @@ const RestaurantMenuPage = async ({
   if (!isConsumptionMethodValid(consumptionMethod)) {
     return notFound();
   }
-  const restaurant = await getRestaurantBySlug(slug);
+  const restaurant = await getRestaurantCategories(slug);
 
   if (!restaurant) {
     return notFound();
@@ -31,10 +30,11 @@ const RestaurantMenuPage = async ({
   return (
     <div>
       <RestaurantHeader restaurant={restaurant} />
+      <RestaurantCategories restaurant={restaurant} />
     </div>
   );
 };
 
-export default RestaurantMenuPage; 
+export default RestaurantMenuPage;
 
 //commit podemos importar client components para dentro de server components, mas não podemos importar server components para dentro de client components
