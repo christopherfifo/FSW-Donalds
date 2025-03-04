@@ -30,7 +30,7 @@ const ConsumptionMethodOption = ({
             className="object-contain"
           />
         </div>
-        <Button variant="secondary" className="rounded-full">
+        <Button variant="secondary" className="rounded-full" asChild> 
           <Link href={`/${slug}/menu?consumptionMethod=${option}`}>{buttonText}</Link>
         </Button>
       </CardContent>
@@ -39,3 +39,4 @@ const ConsumptionMethodOption = ({
 };
 
 export default ConsumptionMethodOption;
+// asChild é para passar o botão como filho do link
