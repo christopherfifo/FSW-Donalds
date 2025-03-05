@@ -1,17 +1,27 @@
 import { db } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import ProductHeader from "./components/productHeader";
+import ProductDetails from "./components/productDetails";
 
 interface ProductPageProps {
   params: Promise<{ slug: string; productId: string }>; //mesmo nome que está na pasta pages
 }
 
 const ProductPage = async ({ params }: ProductPageProps) => {
-  const { slug, productId } = await params;
+  const {slug, productId } = await params;
 
   const product = await db.product.findUnique({
     where: {
       id: productId,
+    },
+    include: {
+      restaurant: {
+        select: {
+          name: true,
+          avatarImageUrl: true,
+          slug: true,
+        },
+      },
     },
   });
 
@@ -19,14 +29,15 @@ const ProductPage = async ({ params }: ProductPageProps) => {
     return notFound();
   }
 
-  return (
-    <>
-     <ProductHeader product={product} />
+  if(product.restaurant.slug.toUpperCase() !== slug.toUpperCase()) {
+    return notFound();
+  }
 
-      <h1>Product page</h1>
-      <p>{slug}</p>
-      <p>{productId}</p>
-    </>
+  return (
+    <div className="flex h-full flex-col">
+      <ProductHeader product={product} />
+      <ProductDetails product={product} />
+    </div>
   );
 };
 
