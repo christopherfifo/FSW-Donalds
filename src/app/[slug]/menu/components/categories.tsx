@@ -23,8 +23,9 @@ type MenuCategoryWithProducts = Prisma.MenuCategoryGetPayload<{
 }>;
 
 const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
-  const [selectCategory, setSelectCategory] =
-    useState<MenuCategoryWithProducts>(restaurant.menuCategories[0]);
+
+  const [selectCategory, setSelectCategory] = useState<MenuCategoryWithProducts>(restaurant.menuCategories[0]);
+
   const handleCategoryClick = (category: MenuCategoryWithProducts) =>
     setSelectCategory(category);
 
@@ -64,8 +65,7 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
             >
               {category.name}
             </Button>
-          ))}
-          ; //commit aqui eu fiz um map para pegar todas as categorias do restaurante e criar um botão para cada uma delas, e quando eu clicar em um botão ele vai setar a categoria selecionada
+          ))} 
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
@@ -77,3 +77,8 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
 };
 
 export default RestaurantCategories;
+
+//commit aqui eu fiz um map para pegar todas as categorias do restaurante e criar um botão para cada uma delas, e quando eu clicar em um botão ele vai setar a categoria selecionada
+// primeiro eu pegos as categorias de lanches do restaurant no map, no useState eu seto a primeira categoria como a categoria selecionada
+// depois eu crio um botão para cada categoria, e quando eu clicar em um botão ele vai setar a categoria selecionada
+// e por fim eu renderizo os produtos da categoria selecionada
