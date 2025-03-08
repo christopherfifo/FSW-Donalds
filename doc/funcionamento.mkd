@@ -2,3 +2,11 @@ npx prisma init
 npx prisma format
 npx prisma migrate dev
 npx prisma db seed
+
+todo: 
+- implementar um skeleton 
+- colocar o name do restaurante como unique
+- colocar um login para o estabelecimento
+- colocar um historico de pedidos com filtro de dia, semana, mes, ano e all
+- se o pedido for para viagem pedir pagamento
+- colocar uma forma de acesso para os clientes consultarem os seus pedidos apos terminar a cessão 
