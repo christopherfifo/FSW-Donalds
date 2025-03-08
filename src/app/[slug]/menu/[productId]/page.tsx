@@ -41,4 +41,4 @@ const ProductPage = async ({ params }: ProductPageProps) => {
   );
 };
 
-export default ProductPage;
+export default ProductPage; //todo
