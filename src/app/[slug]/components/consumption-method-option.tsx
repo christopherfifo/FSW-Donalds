@@ -1,8 +1,9 @@
-import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { ConsumptionMethod } from "@prisma/client"; //importa o tipo ConsumptionMethod do prisma comer aqui ou levar
+import Image from "next/image";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ConsumptionMethodOptionProps {
   imageUrl: string;

@@ -1,11 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/helpers/formatCurrency";
 import { Prisma } from "@prisma/client";
 import { ChefHatIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { formatCurrency } from "@/helpers/formatCurrency";
 
 interface ProductDetailsProps {
   product: Prisma.ProductGetPayload<{

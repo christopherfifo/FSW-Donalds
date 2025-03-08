@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
-import RestaurantHeader from "./components/header";
+
 import RestaurantCategories from "./components/categories";
+import RestaurantHeader from "./components/header";
 import { getRestaurantCategories } from "./data/get-restaurant-categories";
 
 interface RestaurantMenuPageProps {
