@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/helpers/formatCurrency";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CartContext } from "../../contexts/cart";
-import CartSheet from "../../components/cartsheet";
+import CartSheet from "../../components/cartSheet";
 
 interface ProductDetailsProps {
   product: Prisma.ProductGetPayload<{
@@ -25,7 +25,7 @@ interface ProductDetailsProps {
 }
 
 const ProductDetails = ({ product }: ProductDetailsProps) => {
-  const { toggleCart } = useContext(CartContext);
+  const { toggleCart, addProduct } = useContext(CartContext);
   const [quantity, setQuantity] = useState<number>(1);
 
   const handleDecreaseQuantity = () => {
@@ -42,6 +42,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   };
 
   const handleToggleCart = () => {
+    addProduct({ ...product, quantity: quantity });
     toggleCart();
   };
 
@@ -119,7 +120,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           Adicionar à Sacola
         </Button>
       </div>
-      <CartSheet />
+      <CartSheet/>
     </>
   );
 };
