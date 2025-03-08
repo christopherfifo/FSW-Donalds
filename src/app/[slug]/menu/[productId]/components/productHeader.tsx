@@ -8,21 +8,23 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 interface ProductHeaderProps {
-    product: Pick<Product, "name" | "imageUrl">;
+  product: Pick<Product, "name" | "imageUrl">;
 }
 
-const ProductHeader = ({product} : ProductHeaderProps ) => {
+const ProductHeader = ({ product }: ProductHeaderProps) => {
+  const router = useRouter();
 
-    const router= useRouter();
+  const handleBackClick = () => router.back();
 
-    const handleBackClick = () => router.back();
-
-    return (<> <div className="relative h-[300px] w-full">
+  return (
+    <>
+      {" "}
+      <div className="min-h-300 relative h-[300px] w-full">
         <Button
           variant="secondary"
           size="icon"
           className="absolute left-4 top-4 z-50 rounded-full"
-            onClick={handleBackClick}
+          onClick={handleBackClick}
         >
           <ChevronLeftIcon />
         </Button>
@@ -41,7 +43,9 @@ const ProductHeader = ({product} : ProductHeaderProps ) => {
         >
           <ScrollTextIcon />
         </Button>
-      </div></>  );
-}
- 
+      </div>
+    </>
+  );
+};
+
 export default ProductHeader;
