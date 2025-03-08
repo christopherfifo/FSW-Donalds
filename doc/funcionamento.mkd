@@ -10,3 +10,33 @@ todo:
 - colocar um historico de pedidos com filtro de dia, semana, mes, ano e all
 - se o pedido for para viagem pedir pagamento
 - colocar uma forma de acesso para os clientes consultarem os seus pedidos apos terminar a cessão 
+
+commit:
+
+nesse projeto vou usar o contextApi, mas se fosse usar o zustand com o  middleware persist  e o localStorage
+
+```ts
+import create from "zustand";
+import { persist } from "zustand/middleware";
+
+// Definição do tipo de estado
+type Store = {
+  isTrue: boolean;
+  toggle: () => void;
+};
+
+// Criação do estado com persistência usando o middleware `persist`
+export const useStore = create<Store>(
+  persist(
+    (set) => ({
+      isTrue: false,
+      toggle: () => set((state) => ({ isTrue: !state.isTrue })),
+    }),
+    {
+      name: "zustand-storage", // Nome usado para armazenar o estado no localStorage
+      getStorage: () => localStorage, // Usando o localStorage para persistência
+    }
+  )
+);
+
+```

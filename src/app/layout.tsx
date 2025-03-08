@@ -2,6 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { CartProvider } from "./[slug]/menu/contexts/cart";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -20,7 +21,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${poppins.className} antialiased` } suppressHydrationWarning>{children}</body>
+      <body
+        className={`${poppins.className} antialiased`}
+        suppressHydrationWarning
+      >
+        <CartProvider>{children}</CartProvider>
+      </body>
     </html>
   );
 }
+
+//commit o unico jeito de ter um server component dentro de um client component é passando ele como props (children)
