@@ -10,6 +10,7 @@ todo:
 - colocar um historico de pedidos com filtro de dia, semana, mes, ano e all
 - se o pedido for para viagem pedir pagamento
 - colocar uma forma de acesso para os clientes consultarem os seus pedidos apos terminar a cessão 
+- tenho que fazer os pedidos ficarem salvos no localstorage
 
 commit:
 
@@ -38,5 +39,25 @@ export const useStore = create<Store>(
     }
   )
 );
+
+```
+
+``` typescript
+// client.ts
+import { PrismaClient } from '@prisma/client'
+
+// Instância global para desenvolvimento (evitar múltiplas instâncias no hot reloading)
+const globalForDb = globalThis as unknown as { db: PrismaClient }
+
+export const db =
+  process.env.NODE_ENV === 'production'
+    ? new PrismaClient()  // Em produção, cria uma única instância
+    : globalForDb.db || new PrismaClient()  // Em desenvolvimento, reutiliza a instância global
+
+// Apenas em desenvolvimento, armazenamos a instância global para evitar recriação
+if (process.env.NODE_ENV !== 'production') {
+  globalForDb.db = db
+}
+
 
 ```

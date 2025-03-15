@@ -1,9 +1,27 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import HomePageSkeleton from "@/components/homePageSkeleton";
 
 const HomePage = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 5000); 
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <HomePageSkeleton />;
+  }
+
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-red-600 px-6">
       <div className="flex h-screen w-full flex-col items-center justify-center">
