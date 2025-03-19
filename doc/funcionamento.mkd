@@ -58,6 +58,7 @@ export const db =
 if (process.env.NODE_ENV !== 'production') {
   globalForDb.db = db
 }
-
-
 ```
+
+
+usamos zod e reacth hoock forms por meio do component form do shadcn, react number format
