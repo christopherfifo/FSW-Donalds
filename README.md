@@ -15,14 +15,20 @@ O FSW - Donald’s é uma aplicação web FullStack desenvolvida com o framework
 - **Backend:**  Node e Next Js;
 - **Banco de Dados:** PostgreSql e Neon;
 - **Outras  ferramentas:** ESLint e ORM Prisma
-### 🛠️Descrição da ferramentas
+  
+## 🛠️ Descrição das Ferramentas
 
-- **ORM Prisma:** Facilita a comunicação com o banco de dados, permitindo a criação de queries de forma mais intuitiva e segura.
-- **Neon:** Serviço de banco de dados PostgreSQL na nuvem, usado para hospedar e gerenciar o banco remotamente.
-- **ESLint:** Ferramenta para análise de código, ajudando a manter um padrão e identificar erros.
-- **Zod:** Biblioteca para validação de dados e definição de schemas, garantindo a integridade das informações manipuladas.
-- **React Number Format:** Componente para formatação de entradas numéricas, como moedas, porcentagens e documentos.
-- **React Hook Form:** Gerencia formulários de forma simples e eficiente, integrando facilmente com validações e bibliotecas externas.
+- **ORM Prisma:** Facilita a comunicação com o banco de dados, permitindo a criação de queries de forma mais intuitiva e segura. No projeto, o Prisma é utilizado para definir os modelos de dados e realizar operações CRUD no banco de dados PostgreSQL.
+  
+- **Neon:** Serviço de banco de dados PostgreSQL na nuvem, usado para hospedar e gerenciar o banco remotamente. O Neon foi escolhido por sua facilidade de uso e integração com o Prisma.
+
+- **ESLint:** Ferramenta para análise de código, ajudando a manter um padrão e identificar erros. Configurado para seguir as melhores práticas de desenvolvimento com TypeScript e React.
+
+- **Zod:** Biblioteca para validação de dados e definição de schemas, garantindo a integridade das informações manipuladas. Utilizado principalmente para validar entradas de formulários e dados recebidos via API.
+
+- **React Number Format:** Componente para formatação de entradas numéricas, como moedas, porcentagens e documentos. Usado para garantir que os valores monetários sejam exibidos corretamente no frontend.
+
+- **React Hook Form:** Gerencia formulários de forma simples e eficiente, integrando facilmente com validações e bibliotecas externas. Utilizado em conjunto com o Zod para validar e gerenciar o estado dos formulários.
 
 ## ⚙️Instalação e execução
 
@@ -209,77 +215,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 ## 📡Context Api
 
-Arquivo que engloba todo o projeto para a utilização dos states por diversos componentes sem a necessidade de passar como props.
-
-Arquivo do ``layout``
-
-```tsx
-import "./globals.css";
-
-  
-
-import type { Metadata } from "next";
-
-import { Poppins } from "next/font/google";
-
-import { CartProvider } from "./[slug]/menu/contexts/cart";
-
-  
-
-const poppins = Poppins({
-
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-
-  subsets: ["latin"],
-
-});
-
-  
-
-export const metadata: Metadata = {
-
-  title: "FSW Donalds",
-
-  description: "Bora finalizar esse projeto lindo!",
-
-  icons: "/logo.png",
-
-};
-
-  
-
-export default function RootLayout({
-
-  children,
-
-}: Readonly<{
-
-  children: React.ReactNode;
-
-}>) {
-
-  return (
-
-    <html lang="pt-BR" suppressHydrationWarning>
-
-      <body
-
-        className={`${poppins.className} antialiased`}
-
-        suppressHydrationWarning
-
-      >
-
-        <CartProvider>{children}</CartProvider>
-
-      </body>
-
-    </html>
-
-  );
-
-}
-```
 
 Arquivo ``cart.tsx``
 
@@ -509,4 +444,76 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 
 };
+```
+
+Arquivo que engloba todo o projeto para a utilização dos states por diversos componentes sem a necessidade de passar como props.
+
+Arquivo do ``layout``
+
+```tsx
+import "./globals.css";
+
+  
+
+import type { Metadata } from "next";
+
+import { Poppins } from "next/font/google";
+
+import { CartProvider } from "./[slug]/menu/contexts/cart";
+
+  
+
+const poppins = Poppins({
+
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+
+  subsets: ["latin"],
+
+});
+
+  
+
+export const metadata: Metadata = {
+
+  title: "FSW Donalds",
+
+  description: "Bora finalizar esse projeto lindo!",
+
+  icons: "/logo.png",
+
+};
+
+  
+
+export default function RootLayout({
+
+  children,
+
+}: Readonly<{
+
+  children: React.ReactNode;
+
+}>) {
+
+  return (
+
+    <html lang="pt-BR" suppressHydrationWarning>
+
+      <body
+
+        className={`${poppins.className} antialiased`}
+
+        suppressHydrationWarning
+
+      >
+
+        <CartProvider>{children}</CartProvider>
+
+      </body>
+
+    </html>
+
+  );
+
+}
 ```
