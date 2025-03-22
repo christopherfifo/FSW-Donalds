@@ -37,13 +37,19 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-const FinishOrderButton = () => {
+interface FinishOrderDiaLogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const FinishOrderDiaLog = ({ open, onOpenChange }: FinishOrderDiaLogProps) => {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       cpf: "",
     },
+    shouldUnregister: true,
   });
 
   const onSubmit = (data: FormSchema) => {
@@ -51,14 +57,14 @@ const FinishOrderButton = () => {
   };
 
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button className="w-full rounded-full">Finalizar pedido</Button>
-      </DrawerTrigger>
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerTrigger asChild></DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Finalizar Pedido</DrawerTitle>
-          <DrawerDescription>Confira os itens do seu pedido</DrawerDescription>
+          <DrawerDescription>
+            Insira as suas informações abaixo para finalizar o seu pedido
+          </DrawerDescription>
         </DrawerHeader>
         <div className="p-5">
           <Form {...form}>
@@ -83,16 +89,29 @@ const FinishOrderButton = () => {
                   <FormItem>
                     <FormLabel>Seu CPF</FormLabel>
                     <FormControl>
-                      <PatternFormat placeholder="Digite o seu CPF..." format="###.###.###-##" customInput={Input} {...field}/>
+                      <PatternFormat
+                        placeholder="Digite o seu CPF..."
+                        format="###.###.###-##"
+                        customInput={Input}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <DrawerFooter>
-                <Button type="submit">Submit</Button>
+                <Button
+                  type="submit"
+                  variant="destructive"
+                  className="rounded-full"
+                >
+                  Finalizar
+                </Button>
                 <DrawerClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button variant="outline" className="w-full rounded-full">
+                    Cancelar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </form>
@@ -103,7 +122,6 @@ const FinishOrderButton = () => {
   );
 };
 
-export default FinishOrderButton;
-
+export default FinishOrderDiaLog;
 //ficar de olho no DrawerClose asChild, se tiver mais de um botão, eles devem ser filhos do DrawerClose, ou seja, ficar dentro de uma div
 //todo 50
