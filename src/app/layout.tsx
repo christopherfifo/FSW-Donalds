@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { CartProvider } from "./[slug]/menu/contexts/cart";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -27,6 +28,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <CartProvider>{children}</CartProvider>
+        <Toaster />
       </body>
     </html>
   );

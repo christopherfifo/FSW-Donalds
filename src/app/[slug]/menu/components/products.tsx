@@ -1,27 +1,29 @@
 import { Product } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 import { formatCurrency } from "@/helpers/formatCurrency";
-
 
 interface ProductsProps {
   products: Product[];
 }
 
 const Products = ({ products }: ProductsProps) => {
-
-  const {slug} = useParams<{slug : string}>();//commit useParams é um hook que pega os parâmetros da URL, 
+  const { slug } = useParams<{ slug: string }>(); //commit useParams é um hook que pega os parâmetros da URL,
   //commit usamos ele pois esse compenente está dentro de um cleint component, o que torna ele um client component
   //commit e por isso não temos acesso a banco de dados, podendo receber os dados apenas por props ou pela URL
+
+  const searchParams = useSearchParams();
+
+  const ConsumptionMethod = searchParams.get("consumptionMethod");
 
   return (
     <div className="space-y-3 px-5 py-3">
       {products.map((product) => (
         <Link
           key={product.id}
-          href={`/${slug}/menu/${product.id}`}
+          href={`/${slug}/menu/${product.id}?consumptionMethod=${ConsumptionMethod}`}
           className="flex items-center justify-between gap-10 border-b py-3"
         >
           {/* ESQUERDA */}

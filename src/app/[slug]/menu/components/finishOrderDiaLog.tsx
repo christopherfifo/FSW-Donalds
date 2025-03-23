@@ -25,6 +25,14 @@ import {
 } from "@/components/ui/drawer";
 import { isValideCPF } from "../helpers/cpf";
 import { useForm } from "react-hook-form";
+import { ConsumptionMethod } from "@prisma/client";
+import { useParams, useSearchParams } from "next/navigation";
+import { startTransition, useContext, useTransition } from "react";
+import { CartContext } from "../contexts/cart";
+import { createOrder } from "../actions/createOrder";
+import { on } from "events";
+import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
@@ -43,6 +51,12 @@ interface FinishOrderDiaLogProps {
 }
 
 const FinishOrderDiaLog = ({ open, onOpenChange }: FinishOrderDiaLogProps) => {
+  const { slug } = useParams<{ slug: string }>();
+  const { products } = useContext(CartContext);
+
+  const searchParams = useSearchParams();
+  const [isPending, setIs_Pending] = useTransition();
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,8 +66,27 @@ const FinishOrderDiaLog = ({ open, onOpenChange }: FinishOrderDiaLogProps) => {
     shouldUnregister: true,
   });
 
-  const onSubmit = (data: FormSchema) => {
-    console.log(data);
+  const onSubmit = async (data: FormSchema) => {
+    try {
+      const consumptionMethod = searchParams.get(
+        "consumptionMethod",
+      ) as ConsumptionMethod;
+
+      startTransition(async () => {
+        await createOrder({
+          consumptionMethod,
+          customerCpf: data.cpf,
+          customerName: data.name,
+          products,
+          slug,
+        });
+
+        onOpenChange(false);
+        toast.success("Pedido finalizado com sucesso");
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -105,7 +138,9 @@ const FinishOrderDiaLog = ({ open, onOpenChange }: FinishOrderDiaLogProps) => {
                   type="submit"
                   variant="destructive"
                   className="rounded-full"
+                  disabled={isPending}
                 >
+                  {isPending && <Loader2Icon className="animate-spin" />}
                   Finalizar
                 </Button>
                 <DrawerClose asChild>
@@ -124,4 +159,8 @@ const FinishOrderDiaLog = ({ open, onOpenChange }: FinishOrderDiaLogProps) => {
 
 export default FinishOrderDiaLog;
 //ficar de olho no DrawerClose asChild, se tiver mais de um botão, eles devem ser filhos do DrawerClose, ou seja, ficar dentro de uma div
-//todo 50
+
+//* server action
+
+//* server action são ações que são executadas no servidor, como por exemplo, salvar um pedido, salvar um usuário, etc, mas podem ser chamadas
+//* no cliente, para isso, é necessário criar uma função que chama a função do servidor, e essa função é chamada no cliente.
