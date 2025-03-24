@@ -8,10 +8,9 @@ export interface CartProduct
   quantity: number;
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ICartContext {
   isOpen: boolean;
-  products: any[];
+  products: any[];  // eslint-disable-line @typescript-eslint/no-explicit-any
   total: number;
   toggleCart: () => void;
   addProduct: (product: CartProduct) => void;
@@ -19,7 +18,6 @@ export interface ICartContext {
   increaseProductQuantity: (productId: string) => void;
   removeProduct: (productId: string) => void;
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export interface ICartContext {
   isOpen: boolean;
