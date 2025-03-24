@@ -56,7 +56,7 @@ const FinishOrderDiaLog = ({ open, onOpenChange }: FinishOrderDiaLogProps) => {
   const { products } = useContext(CartContext);
 
   const searchParams = useSearchParams();
-  const [isPending, setIs_Pending] = useTransition();
+  const [isPending] = useTransition();
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
