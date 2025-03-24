@@ -3,6 +3,7 @@
 import { db } from "@/lib/prisma";
 import { ConsumptionMethod } from "@prisma/client";
 import { removeCpfPunctuation } from "../helpers/cpf";
+import { redirect } from "next/navigation";
 
 interface CreateOrderInput {
   customerName: string;
@@ -62,6 +63,9 @@ export const createOrder = async (input: CreateOrderInput) => {
       restaurantId: restaurant.id,
     },
   });
+
+
+  redirect(`/${input.slug}/orders`);	
 };
 //commit adicionar a diretiva use server para indicar que o arquivo é um arquivo de servidor
 

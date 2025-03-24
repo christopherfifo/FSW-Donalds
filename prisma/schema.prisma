@@ -84,11 +84,8 @@ model OrderProduct {
 
 enum OrderStatus {
   PENDING
-  CONFIRMED
   IN_PREPARATION
   FINISHED
-  ON_ITS_WAY
-  DELIVERED
   CANCELED
 }
 

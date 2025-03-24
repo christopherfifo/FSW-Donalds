@@ -47,9 +47,12 @@ const HomePage = () => {
           </p>
         </div>
       </div>
-      <div className="flex items-center justify-center p-14">
+      <div className="flex items-center flex-col space-y-6 p-14">
         <Button variant="secondary" className="rounded-full" asChild>
           <Link href={`/fsw-donalds`}>Começar</Link>
+        </Button>
+        <Button className="rounded-full" asChild>
+          <Link href={`/fsw-donalds/orders`}>Visualizar pedidos</Link>
         </Button>
       </div>
     </div>
