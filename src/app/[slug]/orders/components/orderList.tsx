@@ -1,10 +1,13 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/helpers/formatCurrency";
-import { Order, OrderStatus, Prisma } from "@prisma/client";
+import { OrderStatus, Prisma } from "@prisma/client";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface OrderLitsProps {
   orders: Array<
@@ -27,39 +30,50 @@ interface OrderLitsProps {
 }
 
 const getStatusLabel = (status: OrderStatus) => {
-    switch (status) {
-        case OrderStatus.FINISHED:
-        return "Finalizado";
-        case OrderStatus.PENDING:
-        return "Pendente";
-        case OrderStatus. IN_PREPARATION:
-        return "Em preparação";
-        case OrderStatus.CANCELED:
-        return "Cancelado";
-        default:
-        return "";
-    }
-    };
+  switch (status) {
+    case OrderStatus.FINISHED:
+      return "Finalizado";
+    case OrderStatus.PENDING:
+      return "Pendente";
+    case OrderStatus.IN_PREPARATION:
+      return "Em preparação";
+    case OrderStatus.CANCELED:
+      return "Cancelado";
+    default:
+      return "";
+  }
+};
 
-    const getStatusColor = (status: OrderStatus) => {   
-        switch (status) {
-            case OrderStatus.FINISHED:
-            return "bg-green-400";
-            case OrderStatus.PENDING:
-            return "bg-gray-300";
-            case OrderStatus. IN_PREPARATION:
-            return "bg-yellow-500";
-            case OrderStatus.CANCELED:
-            return "bg-red-500";
-            default:
-            return "";
-        }
-    }
+const getStatusColor = (status: OrderStatus) => {
+  switch (status) {
+    case OrderStatus.FINISHED:
+      return "bg-green-400";
+    case OrderStatus.PENDING:
+      return "bg-gray-300";
+    case OrderStatus.IN_PREPARATION:
+      return "bg-yellow-500";
+    case OrderStatus.CANCELED:
+      return "bg-red-500";
+    default:
+      return "";
+  }
+};
 
 const OrderList = ({ orders }: OrderLitsProps) => {
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <div className="space-y-6 p-6">
-      <Button size="icon" variant="secondary" className="rounded-full">
+      <Button
+        size="icon"
+        variant="secondary"
+        className="rounded-full"
+        onClick={handleBack}
+      >
         <ChevronLeftIcon />
       </Button>
       <div className="flex items-center gap-3">
@@ -70,13 +84,11 @@ const OrderList = ({ orders }: OrderLitsProps) => {
         <Card key={order.id} className="p-4">
           <CardContent className="space-y-4 p-5">
             <div
-              className={`w-fit rounded-full px-2 py-1 text-xs font-semibold text-white ${
-                getStatusColor(order.status)
-              }`}
+              className={`w-fit rounded-full px-2 py-1 text-xs font-semibold text-white ${getStatusColor(
+                order.status,
+              )}`}
             >
-              {
-                getStatusLabel(order.status)
-              }
+              {getStatusLabel(order.status)}
             </div>
             <div className="flex items-center gap-2">
               <div className="relative h-5 w-5">

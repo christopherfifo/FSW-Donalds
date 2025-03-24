@@ -65,7 +65,7 @@ export const createOrder = async (input: CreateOrderInput) => {
   });
 
 
-  redirect(`/${input.slug}/orders`);	
+  redirect(`/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`);	
 };
 //commit adicionar a diretiva use server para indicar que o arquivo é um arquivo de servidor
 

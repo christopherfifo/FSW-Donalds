@@ -1,21 +1,14 @@
-/* eslint-disable */
+import { PrismaClient } from '@prisma/client'
 
-import { PrismaClient } from "@prisma/client";
+// Instância global para desenvolvimento (evitar múltiplas instâncias no hot reloading)
+const globalForDb = globalThis as unknown as { db: PrismaClient }
 
-declare global {
-  var cachedPrisma: PrismaClient;
+export const db =
+  process.env.NODE_ENV === 'production'
+    ? new PrismaClient()  // Em produção, cria uma única instância
+    : globalForDb.db || new PrismaClient()  // Em desenvolvimento, reutiliza a instância global
+
+// Apenas em desenvolvimento, armazenamos a instância global para evitar recriação
+if (process.env.NODE_ENV !== 'production') {
+  globalForDb.db = db
 }
-
-let prisma: PrismaClient;
-if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient();
-} else {
-  if (!global.cachedPrisma) {
-    global.cachedPrisma = new PrismaClient();
-  }
-  prisma = global.cachedPrisma;
-}
-
-//usar o db para chamadas ao banco de dados
-
-export const db = prisma;

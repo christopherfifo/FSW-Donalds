@@ -30,7 +30,6 @@ import { useParams, useSearchParams } from "next/navigation";
 import { startTransition, useContext, useTransition } from "react";
 import { CartContext } from "../contexts/cart";
 import { createOrder } from "../actions/createOrder";
-import { on } from "events";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 
