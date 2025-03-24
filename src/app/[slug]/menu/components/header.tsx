@@ -6,14 +6,22 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import CartSheet from "./cartSheet";
+import { useContext } from "react";
+import { CartContext } from "../contexts/cart";
 
 interface RestaurantHeaderProps {
   restaurant: Pick<Restaurant, "coverImageUrl" | "name">; //pick pega apenas os campos que eu quero, ele vai pegar apenas esse campos da props
 }
 
 const RestaurantHeader = ({ restaurant }: RestaurantHeaderProps) => {
+  const { toggleCart } = useContext(CartContext);
   const router = useRouter();
   const HandleBackClick = () => router.back();
+
+  const handleToggleCart = () => {
+    toggleCart();
+  }
 
   return (
     <div className="relative h-[250px] w-full">
@@ -35,10 +43,13 @@ const RestaurantHeader = ({ restaurant }: RestaurantHeaderProps) => {
         variant="secondary"
         size="icon"
         className="absolute right-4 top-4 z-50 rounded-full"
+        onClick={handleToggleCart}
       >
         <ScrollTextIcon />
-      </Button>
+      </Button> 
+      <CartSheet/>
     </div>
+   
   );
 };
 

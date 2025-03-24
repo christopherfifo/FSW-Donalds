@@ -8,6 +8,7 @@ import { OrderStatus, Prisma } from "@prisma/client";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import OrderItems from "./orderItems";
 
 interface OrderLitsProps {
   orders: Array<
@@ -102,16 +103,7 @@ const OrderList = ({ orders }: OrderLitsProps) => {
               <p className="text-sm font-semibold">{order.restaurant.name}</p>
             </div>
             <Separator />
-            <div className="space-y-2">
-              {order.orderProducts.map((orderProduct) => (
-                <div key={orderProduct.id} className="flex items-center gap-2">
-                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-400 text-xs font-semibold text-white">
-                    {orderProduct.quantity}
-                  </div>
-                  <p className="text-sm">{orderProduct.product.name}</p>
-                </div>
-              ))}
-            </div>
+            <OrderItems order={order} />
             <Separator />
             <p className="text-sm font-medium">{formatCurrency(order.total)}</p>
           </CardContent>
