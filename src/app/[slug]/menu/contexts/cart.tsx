@@ -10,18 +10,7 @@ export interface CartProduct
 
 export interface ICartContext {
   isOpen: boolean;
-  products: any[];  // eslint-disable-line @typescript-eslint/no-explicit-any
-  total: number;
-  toggleCart: () => void;
-  addProduct: (product: CartProduct) => void;
-  decreaseProductQuantity: (productId: string) => void;
-  increaseProductQuantity: (productId: string) => void;
-  removeProduct: (productId: string) => void;
-}
-
-export interface ICartContext {
-  isOpen: boolean;
-  products: any[];
+  products: CartProduct[];  
   total: number;
   toggleCart: () => void;
   addProduct: (product: CartProduct) => void;
