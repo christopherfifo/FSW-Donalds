@@ -6,10 +6,11 @@ import Image from "next/image";
 import { useContext, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/helpers/formatCurrency";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CartContext } from "../../contexts/cart";
+import { formatCurrency } from "@/helpers/formatCurrency";
+
 import CartSheet from "../../components/cartSheet";
+import { CartContext } from "../../contexts/cart";
 
 interface ProductDetailsProps {
   product: Prisma.ProductGetPayload<{
@@ -120,7 +121,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           Adicionar à Sacola
         </Button>
       </div>
-      <CartSheet/>
+      <CartSheet />
     </>
   );
 };

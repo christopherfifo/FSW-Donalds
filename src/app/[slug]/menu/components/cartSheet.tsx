@@ -1,16 +1,18 @@
+import { useContext, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useContext, useState } from "react";
+import { formatCurrency } from "@/helpers/formatCurrency";
+
 import { CartContext } from "../contexts/cart";
 import CartProductItem from "./cartProductItems";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card, CardContent } from "@/components/ui/card";
-import { formatCurrency } from "@/helpers/formatCurrency";
-import { Button } from "@/components/ui/button";
 import FinishOrderDiaLog from "./finishOrderDiaLog";
 
 const CartSheet = () => {

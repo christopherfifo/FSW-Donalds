@@ -1,18 +1,16 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ConsumptionMethod } from "@prisma/client";
+import { Loader2Icon } from "lucide-react";
+import { useParams, useSearchParams } from "next/navigation";
+import { startTransition, useContext, useTransition } from "react";
+import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -23,15 +21,19 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { isValideCPF } from "../helpers/cpf";
-import { useForm } from "react-hook-form";
-import { ConsumptionMethod } from "@prisma/client";
-import { useParams, useSearchParams } from "next/navigation";
-import { startTransition, useContext, useTransition } from "react";
-import { CartContext } from "../contexts/cart";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
 import { createOrder } from "../actions/createOrder";
-import { toast } from "sonner";
-import { Loader2Icon } from "lucide-react";
+import { CartContext } from "../contexts/cart";
+import { isValideCPF } from "../helpers/cpf";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
@@ -51,7 +53,7 @@ interface FinishOrderDiaLogProps {
 
 const FinishOrderDiaLog = ({ open, onOpenChange }: FinishOrderDiaLogProps) => {
   const { slug } = useParams<{ slug: string }>();
-  const { products} = useContext(CartContext);
+  const { products } = useContext(CartContext);
 
   const searchParams = useSearchParams();
   const [isPending, setIs_Pending] = useTransition();
@@ -82,7 +84,6 @@ const FinishOrderDiaLog = ({ open, onOpenChange }: FinishOrderDiaLogProps) => {
 
         onOpenChange(false);
         toast.success("Pedido finalizado com sucesso");
-       
       });
     } catch (error) {
       console.log(error);

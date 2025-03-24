@@ -1,9 +1,11 @@
 "use server";
 
-import { db } from "@/lib/prisma";
 import { ConsumptionMethod } from "@prisma/client";
-import { removeCpfPunctuation } from "../helpers/cpf";
 import { redirect } from "next/navigation";
+
+import { db } from "@/lib/prisma";
+
+import { removeCpfPunctuation } from "../helpers/cpf";
 
 interface CreateOrderInput {
   customerName: string;
@@ -64,8 +66,9 @@ export const createOrder = async (input: CreateOrderInput) => {
     },
   });
 
-
-  redirect(`/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`);	
+  redirect(
+    `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`,
+  );
 };
 //commit adicionar a diretiva use server para indicar que o arquivo é um arquivo de servidor
 

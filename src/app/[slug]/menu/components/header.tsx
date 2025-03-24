@@ -4,11 +4,12 @@ import { Restaurant } from "@prisma/client";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
 
 import { Button } from "@/components/ui/button";
-import CartSheet from "./cartSheet";
-import { useContext } from "react";
+
 import { CartContext } from "../contexts/cart";
+import CartSheet from "./cartSheet";
 
 interface RestaurantHeaderProps {
   restaurant: Pick<Restaurant, "coverImageUrl" | "name">; //pick pega apenas os campos que eu quero, ele vai pegar apenas esse campos da props

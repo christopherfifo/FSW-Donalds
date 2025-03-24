@@ -13,7 +13,7 @@ interface OrderItemProps {
 }
 
 const OrderItems = ({ order }: OrderItemProps) => {
-  return ( 
+  return (
     <div className="space-y-2">
       {order.orderProducts.map((orderProduct) => (
         <div key={orderProduct.id} className="flex items-center gap-2">
@@ -25,6 +25,6 @@ const OrderItems = ({ order }: OrderItemProps) => {
       ))}
     </div>
   );
-}
- 
+};
+
 export default OrderItems;

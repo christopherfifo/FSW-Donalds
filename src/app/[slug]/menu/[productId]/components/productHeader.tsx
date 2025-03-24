@@ -4,10 +4,11 @@ import { Product } from "@prisma/client";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
 
 import { Button } from "@/components/ui/button";
+
 import CartSheet from "../../components/cartSheet";
-import { useContext } from "react";
 import { CartContext } from "../../contexts/cart";
 
 interface ProductHeaderProps {

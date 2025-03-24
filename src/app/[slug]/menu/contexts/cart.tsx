@@ -36,7 +36,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const total = products.reduce((acc, product) => {
     return acc + product.price * product.quantity;
-  },0);
+  }, 0);
 
   const toggleCart = () => {
     setIsOpen((prev) => !prev);

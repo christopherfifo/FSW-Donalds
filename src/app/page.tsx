@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect,useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
 import HomePageSkeleton from "@/components/homePageSkeleton";
+import { Button } from "@/components/ui/button";
 
 const HomePage = () => {
   const [loading, setLoading] = useState(true);
