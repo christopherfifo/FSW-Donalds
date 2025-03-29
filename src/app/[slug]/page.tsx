@@ -2,7 +2,6 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { getRestaurantBySlug } from "@/data/get-restaurant-by-slug";
-import { cleanupOrders } from "@/data/cleanup_orders";
 
 import ConsumptionMethodOption from "./components/consumption-method-option";
 import InactivityRedirect from "./components/inactivityRedirect";
@@ -20,8 +19,6 @@ const RestaurantPage = async ({ params }: RestaurantPageProps) => {
   if (!restaurant) {
     return notFound(); //retorna um erro 404
   }
-
-  await cleanupOrders(slug);
 
   return (
     <div className="flex h-screen flex-col items-center justify-center px-6 pt-24">
