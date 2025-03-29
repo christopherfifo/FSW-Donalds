@@ -2,14 +2,15 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { getRestaurantBySlug } from "@/data/get-restaurant-by-slug";
+import { cleanupOrders } from "@/data/cleanup_orders";
 
 import ConsumptionMethodOption from "./components/consumption-method-option";
 import InactivityRedirect from "./components/inactivityRedirect";
-import { cleanupOrders } from "@/data/cleanup_orders";
 
 interface RestaurantPageProps {
-  params: Promise<{ slug: string }>;
-} // pega parametros da url
+  params: { slug: string };
+}
+
 
 const RestaurantPage = async ({ params }: RestaurantPageProps) => {
   const { slug } = await params;
@@ -20,17 +21,12 @@ const RestaurantPage = async ({ params }: RestaurantPageProps) => {
     return notFound(); //retorna um erro 404
   }
 
-  try {
-    await cleanupOrders(slug);
-    console.log('Limpeza de pedidos concluída');
-  } catch (error) {
-    console.error('Erro na limpeza de pedidos:', error);
-  }
+  await cleanupOrders(slug);
 
   return (
     <div className="flex h-screen flex-col items-center justify-center px-6 pt-24">
       {/* LOGO E TITULO */}
-      <InactivityRedirect/>
+      <InactivityRedirect />
       <div className="flex flex-col items-center gap-2">
         <Image
           src={restaurant?.avatarImageUrl}
@@ -68,7 +64,7 @@ const RestaurantPage = async ({ params }: RestaurantPageProps) => {
   );
 };
 
-export default RestaurantPage; 
+export default RestaurantPage;
 
 // como o arquivo esta entre colchetes, ele é uma rota dinamica, ou seja, ele é uma rota que pode receber parametros dinamicos na url
 // o parametro é passado como um objeto, e o nome do parametro é o nome do arquivo

@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/lib/prisma";
 
 export async function cleanupOrders(restaurantSlug: string) {
@@ -10,7 +12,7 @@ export async function cleanupOrders(restaurantSlug: string) {
 
     const restaurant = await db.restaurant.findUnique({
       where: { slug: restaurantSlug },
-      select: { id: true, name: true },
+      select: { id: true },
     });
 
     if (!restaurant) {
@@ -23,15 +25,13 @@ export async function cleanupOrders(restaurantSlug: string) {
       });
 
       if (orderCount >= 10) {
-        // Buscar os 5 pedidos mais antigos
         const oldestOrders = await tx.order.findMany({
           where: { restaurantId: restaurant.id },
           take: 5,
-          orderBy: { createdAt: "asc" }, // Ordenar por mais antigos
+          orderBy: { createdAt: "asc" },
           select: { id: true },
         });
 
-        // Excluir todos os pedidos que não estão entre os 5 mais antigos
         await tx.order.deleteMany({
           where: {
             restaurantId: restaurant.id,
@@ -48,7 +48,5 @@ export async function cleanupOrders(restaurantSlug: string) {
       success: false,
       error: error instanceof Error ? error.message : "Erro desconhecido",
     };
-  } finally {
-    await db.$disconnect();
   }
 }
