@@ -5,6 +5,7 @@ import { getRestaurantBySlug } from "@/data/get-restaurant-by-slug";
 
 import ConsumptionMethodOption from "./components/consumption-method-option";
 import InactivityRedirect from "./components/inactivityRedirect";
+import { cleanupOrders } from "@/data/cleanup_orders";
 
 interface RestaurantPageProps {
   params: Promise<{ slug: string }>;
@@ -17,6 +18,13 @@ const RestaurantPage = async ({ params }: RestaurantPageProps) => {
 
   if (!restaurant) {
     return notFound(); //retorna um erro 404
+  }
+
+  try {
+    await cleanupOrders(slug);
+    console.log('Limpeza de pedidos concluída');
+  } catch (error) {
+    console.error('Erro na limpeza de pedidos:', error);
   }
 
   return (
