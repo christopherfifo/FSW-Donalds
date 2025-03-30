@@ -16,7 +16,8 @@ const HomePageSkeleton = () => {
           <Skeleton className="h-4 w-64 mx-auto" />
         </div>
       </div>
-      <div className="flex items-center justify-center p-14">
+      <div className="flex items-center flex-col space-y-6 p-14">
+        <Skeleton className="h-10 w-20 rounded-full" />
         <Skeleton className="h-10 w-40 rounded-full" />
       </div>
     </div>
