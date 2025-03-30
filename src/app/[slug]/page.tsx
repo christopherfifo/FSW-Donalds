@@ -7,7 +7,7 @@ import ConsumptionMethodOption from "./components/consumption-method-option";
 import InactivityRedirect from "./components/inactivityRedirect";
 
 interface RestaurantPageProps {
-  params: { slug: string };
+  params:  Promise<{ slug: string }>;
 }
 
 
