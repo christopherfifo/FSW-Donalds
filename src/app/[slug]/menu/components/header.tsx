@@ -8,7 +8,6 @@ import { useContext } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import { CartContext } from "../contexts/cart";
 import CartSheet from "./cartSheet";
 
 interface RestaurantHeaderProps {
@@ -16,13 +15,8 @@ interface RestaurantHeaderProps {
 }
 
 const RestaurantHeader = ({ restaurant }: RestaurantHeaderProps) => {
-  const { toggleCart } = useContext(CartContext);
   const router = useRouter();
   const HandleBackClick = () => router.back();
-
-  const handleToggleCart = () => {
-    toggleCart();
-  }
 
   return (
     <div className="relative h-[250px] w-full">
@@ -44,13 +38,11 @@ const RestaurantHeader = ({ restaurant }: RestaurantHeaderProps) => {
         variant="secondary"
         size="icon"
         className="absolute right-4 top-4 z-50 rounded-full"
-        onClick={handleToggleCart}
       >
         <ScrollTextIcon />
-      </Button> 
-      <CartSheet/>
+      </Button>
+      <CartSheet />
     </div>
-   
   );
 };
 
