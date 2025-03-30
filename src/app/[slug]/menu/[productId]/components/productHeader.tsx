@@ -3,26 +3,22 @@
 import { Product } from "@prisma/client";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useParams, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
 import CartSheet from "../../components/cartSheet";
-import { CartContext } from "../../contexts/cart";
 
 interface ProductHeaderProps {
   product: Pick<Product, "name" | "imageUrl">;
 }
 
 const ProductHeader = ({ product }: ProductHeaderProps) => {
-  const { toggleCart } = useContext(CartContext);
+  const { slug } = useParams<{ slug: string }>();
   const router = useRouter();
 
   const handleBackClick = () => router.back();
-  const handleToggleCart = () => {
-    toggleCart();
-  };
+  const handleOrderClick = () => router.push(`/${slug}/orders`);
 
   return (
     <>
@@ -48,7 +44,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
           variant="secondary"
           size="icon"
           className="absolute right-4 top-4 z-50 rounded-full"
-          onClick={handleToggleCart}
+          onClick={handleOrderClick}
         >
           <ScrollTextIcon />
         </Button>

@@ -3,7 +3,7 @@
 import { OrderStatus, Prisma } from "@prisma/client";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -64,9 +64,12 @@ const getStatusColor = (status: OrderStatus) => {
 
 const OrderList = ({ orders }: OrderLitsProps) => {
   const router = useRouter();
+  const { slug } = useParams<{ slug: string }>();
+  const searchParams = useSearchParams();
+  const consumptionMethod = searchParams.get("consumptionMethod");
 
   const handleBack = () => {
-    router.back();
+    router.push(`/${slug}?consumptionMethod=${consumptionMethod}`);
   };
 
   return (

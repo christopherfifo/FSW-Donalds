@@ -2,11 +2,10 @@
 
 import { ConsumptionMethod } from "@prisma/client";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/prisma";
-
 import { removeCpfPunctuation } from "../helpers/cpf";
-
 interface CreateOrderInput {
   customerName: string;
   customerCpf: string;
@@ -66,9 +65,10 @@ export const createOrder = async (input: CreateOrderInput) => {
     },
   });
 
+  revalidatePath(`/${input.slug}/orders`);
+
   redirect(
     `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`,
   );
 };
 //commit adicionar a diretiva use server para indicar que o arquivo é um arquivo de servidor
-
