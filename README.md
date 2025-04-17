@@ -936,11 +936,7 @@ const InactivityRedirect = () => {
 export default InactivityRedirect;
 ```
 
-Este componente redireciona o usuário para a página anterior após um período de inatividade.
-
-- Usa `useEffect` para definir um temporizador de **180 segundos**.
-- Reinicia o temporizador ao detectar eventos como `mousemove`, `keydown` ou `touchstart`.
-- Após o tempo limite, redireciona o usuário para a página anterior com `router.back()`.
+Este componente monitora a inatividade do usuário e, após 180 segundos sem interação (movimento do mouse, pressionamento de tecla ou toque na tela), redireciona-o para a página anterior. É útil para otimizar a experiência em kiosks ou sistemas de autoatendimento.
 
 #### 2. Função ``get-restaurant-by-slug``
 
@@ -968,10 +964,7 @@ export const getRestaurantBySlug = async (slug: string) => {
 };
 ```
 
-Este arquivo busca um restaurante no banco de dados com base no `slug`.
-
-- Usa o Prisma (`db`) para consultar o restaurante na tabela `restaurant`.
-- Retorna os dados do restaurante ou `null` caso não exista.
+Busca um restaurante no banco de dados PostgreSQL usando o `slug` como identificador. Retorna os dados do restaurante ou `null` se não for encontrado. Utiliza o Prisma para a consulta
 
 #### 3. Função/Componente Server ``cleanup_orders`
 ``
@@ -1081,6 +1074,8 @@ export async function cleanupOrders(restaurantSlug: string) {
 }
 ```
 
+Esta função é responsável por limpar pedidos antigos do banco de dados quando o número de pedidos excede um limite (10 pedidos). Ela remove os 5 pedidos mais antigos para manter o banco de dados otimizado. A função é acionada automaticamente e registra logs para depuração. Caso ocorra um erro, retorna uma mensagem de sucesso ou falha.
+
 #### 4. Função ``formatCurrency``
 
 ```ts
@@ -1097,7 +1092,7 @@ export const formatCurrency = (value: number) => {
 };
 ```
 
-### ``[Slug]`` 
+Formata um valor numérico como moeda brasileira (BRL), incluindo o símbolo "R" e separadores de milhar e decimal. Por exemplo, o valor 1000 é formatado como ``R 1.000,00``.
 
 Arquivo ``page.tsx``
 ```tsx
@@ -1747,6 +1742,24 @@ const RestaurantMenuPage = async ({
 export default RestaurantMenuPage;
 ```
 
+Página principal do menu do restaurante que:
+
+1. Valida o parâmetro `consumptionMethod` (deve ser 'DINE_IN' ou 'TAKEAWAY')
+2. Busca os dados do restaurante e suas categorias
+3. Renderiza:
+    
+    - Cabeçalho com informações do restaurante (`RestaurantHeader`)
+    - Categorias de produtos como abas navegáveis (`RestaurantCategories`)
+    - Lista de produtos da categoria selecionada (`Products`)
+
+Fluxo importante:
+
+- Se o método de consumo for inválido → retorna 404
+- Se o restaurante não for encontrado → retorna 404
+- Mantém o parâmetro `consumptionMethod` em toda a navegação
+
+Esta página serve como o hub principal para a experiência de pedidos do usuário, integrando todos os componentes necessários para a seleção de produtos.
+
 #### 1. Função ``createOrder``
 
 ```tsx
@@ -1901,6 +1914,8 @@ export const createOrder = async (input: CreateOrderInput) => {
 };
 ```
 
+Cria um novo pedido no banco de dados, associando-o a um restaurante, cliente (nome e CPF) e produtos selecionados. Calcula o total do pedido com base nos preços dos produtos e suas quantidades. Após a criação, redireciona o usuário para a página de pedidos com o CPF como parâmetro de busca.
+
 #### 2. Função ``cpf``
 
 ```tsx
@@ -1965,6 +1980,9 @@ export const isValideCPF = (cpf: string): boolean => {
 };
 ```
 
+- `removeCpfPunctuation`: Remove pontuações (`.` e `-`) de um CPF, deixando apenas os dígitos.
+- `isValideCPF`: Valida um CPF verificando seu formato, dígitos repetidos e dígitos verificadores. Retorna `true` se válido e `false` caso contrário.
+
 #### 3. Componente ``get-restaurant-categories``
 
 ```tsx
@@ -2004,6 +2022,16 @@ export const getRestaurantCategories = async (slug: string) => {
 
 };
 ```
+
+Consulta o banco de dados para obter:
+
+- Todas as informações de um restaurante específico (identificado pelo slug)
+- Suas categorias de menu
+- Todos os produtos associados a cada categoria
+
+Retorna um objeto completo do restaurante com sua estrutura de menu pronta para ser renderizada. Caso o restaurante não seja encontrado, retorna null.
+
+Esta função é essencial para a construção da página de menu do restaurante, fornecendo todos os dados necessários em uma única consulta otimizada.
 
 #### 4. Componente ``header``
 
@@ -2112,6 +2140,8 @@ const RestaurantHeader = ({ restaurant }: RestaurantHeaderProps) => {
 
 export default RestaurantHeader;
 ```
+
+Exibe o cabeçalho da página do restaurante, incluindo a imagem de capa, nome do restaurante e botões de navegação (voltar e visualizar pedidos). Também renderiza o componente `CartSheet` para exibir o carrinho de compras.
 
 #### 5. Componente ``products``
 
@@ -2225,6 +2255,8 @@ const Products = ({ products }: ProductsProps) => {
 export default Products;
 
 ```
+
+Lista os produtos de uma categoria específica do menu, exibindo nome, descrição, preço e imagem. Cada produto é um link que redireciona para sua página de detalhes.
 
 #### 6. Componente ``Categories``
 
@@ -2568,6 +2600,8 @@ const CartSheet = () => {
 export default CartSheet;
 ```
 
+Exibe um painel lateral (sheet) com os itens do carrinho de compras, incluindo a quantidade, preço unitário e total. Permite finalizar o pedido ou continuar comprando. Utiliza o `CartContext` para gerenciar o estado do carrinho.
+
 #### 8. Componente ``cartProductItems``
 
 ```tsx
@@ -2677,6 +2711,21 @@ const CartProductItem = ({ product }: CartItemProps) => {
 
 export default CartProductItem;
 ```
+
+Renderiza um item individual do carrinho de compras, mostrando:
+
+- Imagem em miniatura do produto
+- Nome e preço unitário
+- Controles para aumentar/diminuir quantidade
+- Botão para remover o item completamente
+
+Utiliza o `CartContext` para:
+
+- `decreaseProductQuantity`: Diminui a quantidade do item
+- `increaseProductQuantity`: Aumenta a quantidade do item
+- `removeProduct`: Remove o item do carrinho
+
+O design é compacto para permitir a exibição de múltiplos itens no carrinho de forma organizada.
 
 #### 9. Componente ``finishOrderDiaLog``
 
@@ -3004,6 +3053,8 @@ const FinishOrderDiaLog = ({ open, onOpenChange }: FinishOrderDiaLogProps) => {
 export default FinishOrderDiaLog;
 ```
 
+Um modal (drawer) que coleta o nome e CPF do cliente para finalizar o pedido. Valida os dados com Zod e envia as informações para a função `createOrder`. Exibe feedback de sucesso ou erro via `toast`.
+
 ### ``[productId]``
 
 Arquivo ``page.tsx``
@@ -3024,7 +3075,7 @@ import ProductHeader from "./components/productHeader";
 
 interface ProductPageProps {
 
-  params: Promise<{ slug: string; productId: string }>; //mesmo nome que está na pasta pages
+  params: Promise<{ slug: string; productId: string }>; 
 
 }
 
@@ -3100,6 +3151,8 @@ const ProductPage = async ({ params }: ProductPageProps) => {
 
 export default ProductPage;
 ```
+
+Exibe os detalhes de um produto específico, incluindo nome, preço, descrição e ingredientes. Valida se o produto pertence ao restaurante correto (via `slug`). Se não for encontrado, retorna um erro 404.
 
 #### 1. Componente ``ProductHeader``
 
@@ -3218,6 +3271,15 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
 
 export default ProductHeader;
 ```
+
+Exibe o cabeçalho da página de detalhes de um produto, incluindo:
+
+- Botão para voltar à página anterior
+- Imagem do produto em destaque
+- Botão para acessar a página de pedidos
+- Integração com o componente `CartSheet` para exibir o carrinho de compras
+
+O componente utiliza os parâmetros da URL (slug) para navegação e mantém consistência com o design do sistema. A imagem do produto é exibida em tamanho grande para melhor visualização.
 
 #### 2. Componente ``productDetails``
 
@@ -3480,3 +3542,5 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
 export default ProductDetails;
 ```
+
+Renderiza os detalhes de um produto, permitindo ajustar a quantidade e adicionar itens ao carrinho. Exibe informações como ingredientes, preço e imagem. Utiliza o `CartContext` para atualizar o carrinho.
