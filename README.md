@@ -135,6 +135,8 @@ FSW-Donalds/
 │  ├─ logo.png
 │  └─ takeaway.png
 ├─ src/
+|  ├─ actions/
+|  │  └─ cleanup-orders.ts
 │  ├─ app/
 │  │  ├─ [slug]/
 │  │  │  ├─ components/
@@ -188,10 +190,10 @@ FSW-Donalds/
 │  │  │  ├─ sheet.tsx
 │  │  │  ├─ skeleton.tsx
 │  │  │  └─ sonner.tsx
-│  │  ├─ homePageSkeleton.tsx
+│  │  ├─ cleanupOrdersTrigger.tsx 
+|  |  ├─ homePageSkeleton.tsx
 │  │  └─ inactivityRedirect.tsx
 │  ├─ data/
-│  │  ├─ cleanup_orders.ts
 │  │  └─ get-restaurant-by-slug.ts
 │  ├─ helpers/
 │  │  └─ formatCurrency.ts
@@ -753,6 +755,8 @@ import { useEffect,useState } from "react";
 
   
 
+import CleanupOrdersTrigger from "@/components/cleanupOrdersTrigger";
+
 import HomePageSkeleton from "@/components/homePageSkeleton";
 
 import { Button } from "@/components/ui/button";
@@ -792,7 +796,7 @@ const HomePage = () => {
   return (
 
     <div className="flex h-screen flex-col items-center justify-center bg-red-600 px-6">
-
+      <CleanupOrdersTrigger />
       <div className="flex h-screen w-full flex-col items-center justify-center">
 
         {/* LOGO E TITULO */}
@@ -865,7 +869,7 @@ const HomePage = () => {
 export default HomePage;
 ```
 
-Este componente redireciona o usuário para a página do restaurante passando na ``URL`` o restaurante que esta sendo referenciado, ou seja, o ``Slug``.
+Este componente redireciona o usuário para a página do restaurante passando na ``URL`` o restaurante que esta sendo referenciado, ou seja, o ``Slug``. Além disso, ao ser inicializado chama o componente responsável por verificar a tamanho da tabela de pedidos e excluir alguns pedidos caso tenha excedido o limite. 
 
 #### 1. Função/Componente ``InactivityRedirect``
 
@@ -966,115 +970,71 @@ export const getRestaurantBySlug = async (slug: string) => {
 
 Busca um restaurante no banco de dados PostgreSQL usando o `slug` como identificador. Retorna os dados do restaurante ou `null` se não for encontrado. Utiliza o Prisma para a consulta
 
-#### 3. Função/Componente Server ``cleanup_orders`
+#### 3. Função/Componente Server ``cleanup-orders`
 ``
 ```ts
-"use server";
+'use server'
 
   
 
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/prisma"
 
   
 
-export async function cleanupOrders(restaurantSlug: string) {
-
-  console.log(`🚀 Iniciando limpeza para: ${restaurantSlug}`);
-
-  
+export async function cleanupOldOrders() {
 
   try {
 
-    if (!restaurantSlug?.trim()) {
+    // Conta o total de pedidos
 
-      throw new Error("Slug inválido");
+    const orderCount = await db.order.count()
+
+    if (orderCount >= 10) {
+
+      // Encontra os IDs dos 5 pedidos mais antigos
+
+      const oldestOrders = await db.order.findMany({
+
+        take: 5,
+
+        orderBy: { createdAt: 'asc' },
+
+        select: { id: true }
+
+      })
+
+  
+
+      // Exclui todos os pedidos exceto os 5 mais antigos
+
+      await db.order.deleteMany({
+
+        where: {
+
+          NOT: { id: { in: oldestOrders.map(o => o.id) } }
+
+        }
+
+      })
+
+  
+
+      console.log('Limpeza de pedidos concluída - mantidos 5 mais recentes')
 
     }
-
-  
-
-    const restaurant = await db.restaurant.findUnique({
-
-      where: { slug: restaurantSlug },
-
-      select: { id: true },
-
-    });
-
-  
-
-    if (!restaurant) {
-
-      throw new Error("Restaurante não encontrado");
-
-    }
-
-  
-
-    await db.$transaction(async (tx) => {
-
-      const orderCount = await tx.order.count({
-
-        where: { restaurantId: restaurant.id },
-
-      });
-
-  
-
-      if (orderCount >= 10) {
-
-        const oldestOrders = await tx.order.findMany({
-
-          where: { restaurantId: restaurant.id },
-
-          take: 5,
-
-          orderBy: { createdAt: "asc" },
-
-          select: { id: true },
-
-        });
-
-  
-
-        await tx.order.deleteMany({
-
-          where: {
-
-            restaurantId: restaurant.id,
-
-            NOT: { id: { in: oldestOrders.map((o) => o.id) } },
-
-          },
-
-        });
-
-      }
-
-    });
-
-  
-
-    return { success: true };
 
   } catch (error) {
 
-    console.error("Erro na limpeza:", error);
+    console.error('Erro na limpeza de pedidos:', error)
 
-    return {
-
-      success: false,
-
-      error: error instanceof Error ? error.message : "Erro desconhecido",
-
-    };
+    throw error
 
   }
 
 }
 ```
 
-Esta função é responsável por limpar pedidos antigos do banco de dados quando o número de pedidos excede um limite (10 pedidos). Ela remove os 5 pedidos mais antigos para manter o banco de dados otimizado. A função é acionada automaticamente e registra logs para depuração. Caso ocorra um erro, retorna uma mensagem de sucesso ou falha.
+Esta função é responsável por limpar pedidos recentes do banco de dados quando o número de pedidos iguala ou excede um limite (10 pedidos). Ela remove os 5 pedidos mais novos para manter o banco de dados otimizado. A função é acionada automaticamente e registra logs para depuração. Caso ocorra um erro, retorna uma mensagem de sucesso ou falha.
 
 #### 4. Função ``formatCurrency``
 
@@ -1216,7 +1176,7 @@ Este arquivo é responsável por exibir a página de um restaurante com base no 
 - Exibe um erro `404` se o restaurante não for encontrado.
 - Renderiza a interface, incluindo o nome, imagem e opções de consumo (`Para comer aqui` ou `Para levar`).
 
-#### 1. Componente  ``ConsumptionMethodOption`` 
+#### 5. Componente  ``ConsumptionMethodOption`` 
 
 ```tsx
 import { ConsumptionMethod } from "@prisma/client"; //importa o tipo ConsumptionMethod do prisma comer aqui ou levar
@@ -1310,6 +1270,81 @@ Componente que representa uma opção de consumo do restaurante.
 - Recebe propriedades como imagem, texto do botão e tipo de consumo (`DINE_IN` ou `TAKEAWAY`).
 - Renderiza um `Card` com a imagem e um botão de escolha.
 - O botão redireciona para o menu do restaurante com o método de consumo escolhido.
+
+#### 6. Componente  ``cleanupOrdersTrigger`` 
+
+```tsx
+'use client'
+
+  
+
+import { useEffect } from 'react'
+
+
+
+import { cleanupOldOrders } from '@/actions/cleanup-orders'
+
+  
+
+export default function CleanupOrdersTrigger() {
+
+  useEffect(() => {
+
+    const checkAndClean = async () => {
+
+      try {
+
+        await cleanupOldOrders()
+
+      } catch (error) {
+
+        console.error('Falha ao limpar pedidos:', error)
+
+      }
+
+    }
+
+  
+
+    // Verifica a cada 1 minuto (ajuste conforme necessário)
+
+    const interval = setInterval(checkAndClean, 60000)
+
+    // Verifica imediatamente ao carregar
+
+    checkAndClean()
+
+  
+
+    return () => clearInterval(interval)
+
+  }, [])
+
+  
+
+  return null // Componente invisível
+
+}
+```
+
+Componente invisível que gerencia automaticamente a limpeza de pedidos antigos no banco de dados. Ele:
+
+1. **Dispara imediatamente** a verificação ao carregar a página.
+2. **Repete a cada 1 minuto** enquanto a aplicação estiver ativa.
+3. **Chama a Server Action** `cleanupOldOrders` para remover pedidos excedentes (mantendo apenas os 5 mais recentes quando há 10+ registros).
+4. **Limpa recursos** automaticamente quando a página é fechada.
+
+**Funcionamento Interno**:
+
+- Usa `useEffect` para controle do ciclo de vida.
+- Registra erros no console sem interromper a aplicação.
+- Não renderiza elementos visíveis (`return null`).
+
+**Integração**:
+
+- Deve ser colocado na página principal (`app/page.tsx`).
+- Trabalha em conjunto com a Server Action `cleanupOldOrders`.
+
 ### Orders
 
 Arquivo `page.tsx`
