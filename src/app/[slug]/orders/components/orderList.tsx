@@ -69,7 +69,9 @@ const OrderList = ({ orders }: OrderLitsProps) => {
   const consumptionMethod = searchParams.get("consumptionMethod");
 
   const handleBack = () => {
-    router.push(`/${slug}/menu?consumptionMethod=${consumptionMethod}`);
+    router.push(
+      `/${slug}/menu?clearCart=true&consumptionMethod=${consumptionMethod}`,
+    );
   };
 
   return (
