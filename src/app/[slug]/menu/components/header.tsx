@@ -18,8 +18,8 @@ interface RestaurantHeaderProps {
 const RestaurantHeader = ({ restaurant }: RestaurantHeaderProps) => {
   const { slug } = useParams<{ slug: string }>();
   const router = useRouter();
-
   const searchParams = useSearchParams();
+  const consumptionMethod = searchParams.get("consumptionMethod");
   const { clearCart, products } = useContext(CartContext);
 
   useEffect(() => {
@@ -35,7 +35,10 @@ const RestaurantHeader = ({ restaurant }: RestaurantHeaderProps) => {
 
   const HandleBackClick = () => router.back();
 
-  const handleOrderClick = () => router.push(`/${slug}/orders`);
+  const handleOrderClick = () =>
+    router.push(
+      `/${slug}/orders?backMethod=menu&consumptionMethod=${consumptionMethod}`,
+    );
 
   return (
     <div className="relative h-[250px] w-full">

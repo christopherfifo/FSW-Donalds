@@ -20,8 +20,13 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
   const consumptionMethod = searchParams.get("consumptionMethod");
 
   const handleBackClick = () =>
-    router.push(`/${slug}/menu?consumptionMethod=${consumptionMethod}`);
-  const handleOrderClick = () => router.push(`/${slug}/orders`);
+    router.push(
+      `/${slug}/menu?backMethod=menu&consumptionMethod=${consumptionMethod}`,
+    );
+  const handleOrderClick = () =>
+    router.push(
+      `/${slug}/orders?backMethod=menu&consumptionMethod=${consumptionMethod}`,
+    );
 
   return (
     <>

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { z } from "zod";
@@ -47,9 +47,18 @@ const CpfForm = () => {
   });
 
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const backMethod = searchParams.get("backMethod");
+  const consumptionMethod = searchParams.get("consumptionMethod");
 
   const onSubmit = (data: FormSchema) => {
-    router.push(`${pathname}?cpf=${removeCpfPunctuation(data.cpf)}`);
+    if (backMethod) {
+      router.push(
+        `${pathname}?cpf=${removeCpfPunctuation(data.cpf)}&backMethod=${backMethod}&consumptionMethod=${consumptionMethod}`,
+      );
+    } else {
+      router.push(`${pathname}?cpf=${removeCpfPunctuation(data.cpf)}`);
+    }
   };
 
   const router = useRouter();
