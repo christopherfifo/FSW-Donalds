@@ -211,9 +211,7 @@ FSW-Donalds/
 ├─ package.json
 ├─ postcss.config.mjs
 ├─ README.md
-
 ├─ tailwind.config.ts
-
 └─ tsconfig.json
 ```
 
@@ -1483,7 +1481,7 @@ const OrderList = ({ orders }: OrderLitsProps) => {
   const consumptionMethod = searchParams.get("consumptionMethod");
 
   const handleBack = () => {
-    router.push(`/${slug}?consumptionMethod=${consumptionMethod}`);
+    router.push(`/${slug}/menu?consumptionMethod=${consumptionMethod}`);
   };
 
   return (
@@ -1942,7 +1940,7 @@ export const createOrder = async (input: CreateOrderInput) => {
 
   redirect(
 
-    `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`,
+    `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}&consumptionMethod=${input.consumptionMethod}`,
 
   );
 
