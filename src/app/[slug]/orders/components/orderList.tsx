@@ -67,9 +67,18 @@ const OrderList = ({ orders }: OrderLitsProps) => {
   const { slug } = useParams<{ slug: string }>();
   const searchParams = useSearchParams();
   const consumptionMethod = searchParams.get("consumptionMethod");
+  const backMethod = searchParams.get("backMethod");
 
   const handleBack = () => {
-    router.push(`/${slug}/menu?consumptionMethod=${consumptionMethod}`);
+    if (backMethod === "menu") {
+      router.push(`/${slug}/menu?consumptionMethod=${consumptionMethod}`);
+      return;
+    } else if (backMethod === "home") {
+      window.location.href = "/";
+    }
+    router.push(
+      `/${slug}/menu?clearCart=true&consumptionMethod=${consumptionMethod}`,
+    );
   };
 
   return (

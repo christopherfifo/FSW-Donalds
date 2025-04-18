@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
 import CleanupOrdersTrigger from "@/components/cleanupOrdersTrigger";
 import HomePageSkeleton from "@/components/homePageSkeleton";
@@ -14,7 +14,7 @@ const HomePage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 5000); 
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -49,12 +49,14 @@ const HomePage = () => {
           </p>
         </div>
       </div>
-      <div className="flex items-center flex-col space-y-10 p-14">
+      <div className="flex flex-col items-center space-y-10 p-14">
         <Button variant="secondary" className="rounded-full" asChild>
           <Link href={`/fsw-donalds`}>Começar</Link>
         </Button>
         <Button className="rounded-full" asChild>
-          <Link href={`/fsw-donalds/orders`}>Visualizar pedidos</Link>
+          <Link href={`/fsw-donalds/orders?backMethod=home`}>
+            Visualizar pedidos
+          </Link>
         </Button>
       </div>
     </div>
