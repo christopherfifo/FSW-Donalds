@@ -2,7 +2,7 @@
 
 ## 🚀Visão geral
 
-  
+   
 
 O FSW - Donald’s é uma aplicação web FullStack desenvolvida com o framework Next Js, tendo como base os tokens de auto atendimento da franquia de restaurante McDonald’s, esse sistema inclui funcionalidades como formas de pedidos divididas em comer no local ou levar, criação de um carrinho de compras com possibilidade incrementar ou decrementar a quantidade dos itens do carro, confirmação de pagamento e validação de acesso para o cadastramento e consultas de pedidos do cliente.
 
